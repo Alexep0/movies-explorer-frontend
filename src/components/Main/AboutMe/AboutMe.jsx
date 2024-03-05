@@ -1,5 +1,5 @@
 import profileImg from "../../../images/myFoto.jpg"
-import Portfolio from "../Portfolio/Portfolio";
+
 function AboutMe() {
     return (
         <section className="aboutMe" id="aboutMe">
@@ -23,7 +23,6 @@ function AboutMe() {
                 </div>
                 <img className="aboutMe__pic" src={profileImg} alt="фото профиля"/>
             </div>
-            <Portfolio/>
         </section>
     )
 }
