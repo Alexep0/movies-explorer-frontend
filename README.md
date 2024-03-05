@@ -30,3 +30,6 @@ See the section about [deployment](https://facebook.github.io/create-react-app/d
 
 ## Ссылка на репозиторий
 https://github.com/Alexep0/movies-explorer-frontend
+
+## Ссылка на макет 
+https://www.figma.com/file/6FMWkB94wE7KTkcCgUXtnC/Дипломный-проект?type=design&node-id=1-7552&mode=design&t=Fm2nSEeF7Zifa1bh-0
