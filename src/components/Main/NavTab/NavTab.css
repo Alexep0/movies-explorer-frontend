@@ -1,0 +1,38 @@
+.navTab {
+    padding: 0;
+    margin: 151px auto 30px;
+    display: grid;
+    list-style-type: none;
+    grid-template-columns: repeat(3, 96px);
+    column-gap: 10px;
+}
+
+.navTab__link {
+    font-weight: 500;
+    font-size: 12px;
+    line-height: 16px;
+    border-radius: 10px;
+    text-align: center;
+    padding: 10px 0;
+    background-color: #303030;
+    color: #ffffff;
+}
+
+@media screen and (max-width: 768px) {
+    .navTab {
+        margin-top: 314px;
+    }
+}
+
+@media screen and (max-width: 360px) {
+    .navTab {
+        margin: 212px auto 17px;
+        grid-template-columns: repeat(3, 82px);
+        column-gap: 6px;
+    }
+
+    .navTab__link {
+        font-size: 10px;
+        padding: 5px 0;
+    }
+}
