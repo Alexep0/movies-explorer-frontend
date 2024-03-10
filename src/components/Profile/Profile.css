@@ -1,0 +1,119 @@
+.profile {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    max-width: 410px;
+    margin: 0 auto;
+}
+
+.profile__title {
+    font-size: 24px;
+    font-weight: 500;
+    margin: 0;
+    padding: 75px 0 123px;
+    line-height: 29px;
+}
+
+.profile__form {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    gap: 16px;
+}
+
+.profile__label {
+    white-space: nowrap;
+    display: flex;
+    justify-content: space-between;
+    border-bottom: 1px solid #424242;
+    font-size: 11px;
+    line-height: 17px;
+    font-weight: 500;
+    padding: 16px 0;
+}
+
+.profile__label:last-of-type {
+    border-bottom: none;
+    padding-top: 0;
+}
+
+.profile__label:first-of-type {
+    padding-top: 0;
+}
+
+.profile__input {
+    border: none;
+    background-color: transparent;
+    color: #ffffff;
+    font-weight: 400;
+    text-align: end;
+    flex-basis: 90%;
+    outline: none;
+}
+
+.profile__input:focus {
+    border-bottom: 1px solid #4285f4;
+}
+
+.profile__btn {
+    display: flex;
+    flex-direction: column;
+    margin: 220px 0 70px;
+    gap: 16px;
+    font-size: 13px;
+    line-height: 16px;
+}
+
+.profile__editButton {
+    color: #ffffff;
+    border: none;
+    background-color: transparent;
+    font-weight: 400;
+    padding: 0;
+}
+
+.profile__logoutButton {
+    color: #EE3465;
+    border: none;
+    background-color: transparent;
+    font-weight: 500;
+    padding: 0;
+}
+
+.profile__saveEditButton {
+    background-color: #3456f3;
+    color: #ffffff;
+    min-width: 100%;
+    min-height: 45px;
+    border-radius: 3px;
+    margin: 220px 0 70px;
+}
+
+@media screen and (max-width: 768px){
+    .profile__title {
+        padding: 236px 0 96px;
+    }
+
+    .profile__btn {
+        margin: 210px 0 269px;
+    }
+}
+
+@media screen and (max-width: 450px) {
+    .profile {
+        margin: 0 30px;
+    }
+
+    .profile__title {
+        padding: 70px 0 80px;
+    }
+
+    .profile__form {
+        max-width: 260px;
+        width: 100%;
+    }
+
+    .profile__btn {
+        margin: 379px 0 40px;
+    }
+}

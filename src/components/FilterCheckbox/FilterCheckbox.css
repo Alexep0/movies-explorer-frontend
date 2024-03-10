@@ -1,0 +1,47 @@
+.checkbox {
+    display: flex;
+    margin: 30px 0 42px;
+    justify-content: center;
+
+}
+
+.checkbox__label {
+    cursor: pointer;
+    background-color: transparent;
+    background-repeat: no-repeat;
+    border: none;
+    width: 35px;
+}
+
+.checkbox__label_inactive {
+    background-image: url("../../images/checkboxDisactive.svg");
+}
+
+.checkbox__label_active {
+    background-image: url("../../images/checkboxActive.svg");
+}
+
+.checkbox__title {
+    font-size: 12px;
+    font-weight: 400;
+    line-height: 18px;
+    margin: 0;
+    padding-left: 13px;
+}
+
+@media screen and (max-width: 768px){
+    .checkbox {
+        margin-top: 43px;
+    }
+}
+
+
+@media screen and (max-width: 320px){
+    .checkbox {
+        margin-top: 49px;
+    }
+
+    .checkbox__title {
+        font-size: 11px;
+    }
+}
