@@ -2,28 +2,24 @@ import ButtonMore from "../ButtonMore/ButtonMore";
 import MoviesCard from "../MoviesCard/MoviesCard";
 import {useState} from "react";
 import Preloader from "../Preloader/Preloader";
+import {useLocation} from "react-router-dom";
 
-export default function MoviesCardList({moviesList, isLoading}) {
-
-    const [countMovies, setCountMovies] = useState(6)
-
-    function loadMore() {
-        setCountMovies(count => count + 6);
-    }
-
+export default function MoviesCardList({moviesList, isLoading, handleMore, filmsRemains, handleClickFavourite}) {
+    const { pathname } = useLocation();
+ 
     return (
         <section className="movie">
             {isLoading ? <Preloader/> : (
                 <>
                     <ul className="movie__list">
-                        {moviesList.slice(0, countMovies).map((movie) => (
+                        {moviesList.map((movie) => (
                             <MoviesCard
                                 movie={movie}
-                                key={movie.id}/>
+                                key={movie.id} handleClickFavourite={handleClickFavourite}/>
                         ))}
                     </ul>
-                    {countMovies < moviesList.length ? (
-                        <ButtonMore handleMoreLoad={loadMore}/>) : null}
+                    {filmsRemains > 0 && pathname !== '/saved-movies' && (
+                        <ButtonMore handleMoreLoad={handleMore}/>)}
                 </>
             )}
         </section>

@@ -1,7 +1,6 @@
-import {useState} from "react";
+import {useState, useEffect} from "react";
 
 export default function Profile({user, onUpdateUser, logout}) {
-
     const [inputEditProfile, setInputEditProfile] = useState({
         name: user.name,
         email: user.email
@@ -18,6 +17,15 @@ export default function Profile({user, onUpdateUser, logout}) {
         setInputEdit(false)
         onUpdateUser(inputEditProfile)
     }
+
+    useEffect(() => {
+        if (user.name) {
+            setInputEditProfile({
+                name: user.name,
+                email: user.email
+            })
+        }
+    }, [user])
 
     return(
         <section className="profile">

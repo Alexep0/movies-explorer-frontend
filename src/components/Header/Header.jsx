@@ -2,7 +2,7 @@ import {Link, NavLink, useLocation} from "react-router-dom";
 import Navigation from "../Navigation/Navigation";
 import {useState} from "react";
 
-export default function Header({auth, openBurger}) {
+export default function Header({auth, openMenu}) {
     const location = useLocation() // локация пользователя для хэдера и футера
     const path = location.pathname
 
@@ -22,7 +22,7 @@ export default function Header({auth, openBurger}) {
                             </div>
                         </div>
                     ) : (//иначе, если авторизован
-                        <Navigation openBurger={openBurger} />
+                        <Navigation openMenu={openMenu} />
                     )}
                 </section>
             )}

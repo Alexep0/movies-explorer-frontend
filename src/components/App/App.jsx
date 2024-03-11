@@ -17,43 +17,86 @@ import SavedMovies from "../SavedMovies/SavedMovies";
 import constantFilm from "../../utils/constantFilm";
 import MenuPopup from "../MenuPopup/MenuPopup";
 import InfoTooltip from "../InfoTooltip/InfoTooltip";
+import MainApi from "../../utils/MainApi";
+import {useEffect} from "react";
+import ProtectedRoute from "../ProtectedRoute/ProtectedRoute";
 
 function App() {
     const navigate = useNavigate()
 
     const [isLoggedIn, setIsLoggedIn] = useState(false) 
     const [isMenu, setIsMenu] = useState(false)
-    const [isLoading, setIsLoading] = useState(false)
+    const [isLoading, setIsLoading] = useState(true)
     const [isSuccess, setIsSuccess] = useState(false)
     const [isInfoToolTip, setIsInfoToolTip] = useState(false)
 
-    const [user, setUser] = useState({name: "Olga", email: 'olga@ya.ru'})
+    const [user, setUser] = useState({})
     const [movies, setMovies] = useState(constantFilm)
     const [savedMovies, setSavedMovies] = useState(constantFilm.slice(0, 3))
 
-    function handleRegister() {
-        setIsLoggedIn(true)
-        setIsInfoToolTip(true)
-        setIsSuccess(true)
-        navigate('/signin', {replace: true})
-    }
-    function handleLogin() {
-        setIsLoggedIn(true)
-        setIsInfoToolTip(true)
-        setIsSuccess(true)
-        navigate('/')
+    const mainApi = new MainApi();
+    
+    function handleRegister(data) {
+        const {name, email, password} = data;
+        mainApi.signUp(name, email, password).then(res => {
+            if (res._id) {
+                handleLogin({email, password});
+            }
+        })
+        .catch((err) => {
+            console.log(err)
+            setIsSuccess(false)
+            setIsInfoToolTip(true)
+        }) 
     }
 
-    function handleUpdateProfile() {
-        setIsInfoToolTip(true)
-        setIsSuccess(true)
-        setUser(user)
-        navigate('/profile')
+    
+    function handleLogin(data) {
+        const {email, password} = data;
+
+        mainApi.signIn(email, password)
+            .then(res => {
+                if (res) {
+                    localStorage.setItem('jwt', res.token)
+                    setIsLoggedIn(true)
+                    navigate('/movies', {replace: true})
+
+                    setIsSuccess(true)
+                    setIsInfoToolTip(true)
+                }
+            })
+            .catch((err) => {
+                console.log(err)
+                setIsSuccess(false)
+                setIsInfoToolTip(true)
+            })
+    }
+
+    function handleUpdateProfile(data) {
+        const jwt = localStorage.getItem('jwt');
+
+        mainApi.updateUser(data.name, data.email, jwt)
+            .then(() => {
+                setUser({
+                    ...user,
+                    name: data.name,
+                    email: data.email
+                })  
+                setIsInfoToolTip(true)
+                setIsSuccess(true)
+            }) 
+            .catch((err) => {
+                console.log(err)
+                setIsSuccess(false)
+                setIsInfoToolTip(true)
+            })
     }
 
     function handleLogOut() {
         setIsLoggedIn(false)
-        navigate('/')
+        setUser({});
+        localStorage.clear();
+        navigate('/', {replace: true})
     }
 
     function handleOpenMenu() {
@@ -64,6 +107,42 @@ function App() {
         setIsMenu(false)
         setIsInfoToolTip(false)
     }
+
+    useEffect(() => {
+        const jwt = localStorage.getItem('jwt');
+
+        if (jwt) {
+            setIsLoading(true)
+            mainApi.getUser(jwt)
+                .then(res => {
+                    setIsLoggedIn(true);
+                    navigate(window.location.pathname)
+                })
+                .catch((err) => {
+                    console.log(err)
+                })
+                .finally(() => {
+                    setIsLoading(false)
+                })
+        } else {
+            setIsLoading(false);
+        }
+    }, [])
+
+    useEffect(() => {
+        const jwt = localStorage.getItem('jwt');
+
+        if (jwt && isLoggedIn) {
+            mainApi.getUser(jwt)
+                .then(res => setUser(res.data))
+                .catch((err) => {
+                    console.log(err)
+                    // setIsLoggedIn(false)
+                })
+        }
+    }, [isLoggedIn])
+
+
 
     return (
       <>
@@ -77,13 +156,24 @@ function App() {
               <Route path="/signin"
                      element={<Login onRegister={handleLogin}/>}/>
               <Route path="/profile"
-                     element={ <Profile user={user}
-                  onUpdateUser={handleUpdateProfile}
-                  logout={handleLogOut}/>}/>
+                     element={
+                        <ProtectedRoute isAuth={isLoggedIn} loading={isLoading}>
+                        <Profile user={user}
+                                    onUpdateUser={handleUpdateProfile}
+                                    logout={handleLogOut}/>
+                    </ProtectedRoute>
+                }/>
               <Route path="/movies"
-                     element={<Movies moviesList={movies} isLoading={isLoading}/>}/>
+                     element={
+                        <ProtectedRoute isAuth={isLoggedIn} loading={isLoading}>
+                        <Movies />
+                        </ProtectedRoute>}/>
               <Route path="/saved-movies"
-                     element={<SavedMovies moviesList={savedMovies}/>}/>
+                     element={
+                        <ProtectedRoute isAuth={isLoggedIn} loading={isLoading}>
+                     <SavedMovies moviesList={savedMovies}/>
+                     </ProtectedRoute>
+                    }/>
               <Route path="*"
                      element={<NotFound/>} />
           </Routes>
