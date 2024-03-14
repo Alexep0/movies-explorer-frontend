@@ -1,21 +1,23 @@
-import { moviesApi } from "../utils/MoviesApi";
 import {useState, useMemo} from "react";
+import  MainApi  from "../utils/MainApi";
 
-export function useMovies() {
-    const init = JSON.parse(localStorage.getItem('allMovies') || "[]");
+export function useSavedMovies() {
+    const init = JSON.parse(localStorage.getItem('savedMovies') || "[]");
 
     const [films, setFilms] = useState(init);
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState(null);
 
-    const [searchQuery, setSearchQuery] = useState(localStorage.getItem('searchQuery') || '');
-    const [searchTumbler, setSearchTumbler] = useState(localStorage.getItem('searchTumbler') === "true" || false);
+    const [searchQuery, setSearchQuery] = useState('');
+    const [searchTumbler, setSearchTumbler] = useState(false);
+
+    const mainApi = new MainApi();
 
     const getMoviesFromApi = async () => {
         try {
-            setIsLoading(true);
-            const films = await moviesApi.getMovies();
-            localStorage.setItem('allMovies', JSON.stringify(films));
+            setIsLoading(true); 
+            const films = await mainApi.getSavedMovies(localStorage.getItem('jwt')) 
+            localStorage.setItem('savedMovies', JSON.stringify(films));
             setFilms(films);
         } catch (error) {
             setError(error.message);
@@ -61,22 +63,32 @@ export function useMovies() {
                     result.push(film);
                 }
             } 
-        })
+        }) 
 
-        localStorage.setItem("searchedFilms", JSON.stringify(result));
         return result;
     } , [searchQuery, searchTumbler, films.length]);
 
     const notFound = !isLoading && (searchTumbler || searchQuery.length > 0) && !filteredFilms.length;
 
     const handleSetSearch = (query) => {
-        setSearchQuery(query);
-        localStorage.setItem('searchQuery', query);
+        setSearchQuery(query); 
     }
 
     const handleSetSearchTumbler = (tumbler) => {
-        setSearchTumbler(tumbler);
-        localStorage.setItem('searchTumbler', tumbler);
+        setSearchTumbler(tumbler); 
+    }
+
+    const handleClickFavourite = async (movie) => {
+        const jwt = localStorage.getItem('jwt'); 
+        try {  
+            const res = await mainApi.deleteMovie(movie._id, jwt);
+            const prevSaved = JSON.parse(localStorage.getItem('savedMovies') || "[]"); 
+            const newSaved = prevSaved.filter(item => item._id !== movie._id); 
+            setFilms(newSaved);
+            localStorage.setItem('savedMovies', JSON.stringify(newSaved));
+        } catch (err) {
+            console.log(err);
+        } 
     }
 
     return {
@@ -86,7 +98,8 @@ export function useMovies() {
         notFound,
         isLoading,
         searchQuery,
-        searchTumbler
+        searchTumbler,
+        handleClickFavourite
     }
 
 }

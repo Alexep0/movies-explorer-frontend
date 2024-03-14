@@ -4,6 +4,7 @@ import { useMovies } from "../../hooks/useMovies";
 import useResize from "../../hooks/useResize";
 import {useState, useEffect} from "react";
 import MainApi from "../../utils/MainApi";
+
 const configForResize = {
     4096: {
         count: 12,
@@ -65,7 +66,6 @@ export default function Movies() {
 
     useEffect(() => {
         const savedMoviesLS = localStorage.getItem('savedMovies');
-        // const savedMoviesLS = null;
 
         if (savedMoviesLS) {
             setSavedFilms(JSON.parse(savedMoviesLS));
@@ -76,6 +76,8 @@ export default function Movies() {
                 localStorage.setItem('savedMovies', JSON.stringify(res));
             })
         }
+
+
     }, []);
 
     async function handleClickFavourite(movie, isLike) {
@@ -83,16 +85,15 @@ export default function Movies() {
         
         if (isLike) {
             try {
-                console.log(movie)
                 const res = await mainApi.saveMovie({
                         country: movie.country,
                         director: movie.director,
                         duration: movie.duration,
                         year: movie.year,
                         description: movie.description,
-                        image: movie.image,
+                        image: "https://api.nomoreparties.co" + `${movie.image.url}`,
                         trailerLink: movie.trailerLink,
-                        thumbnail: movie.humbnail,
+                        thumbnail: "https://api.nomoreparties.co" + `${movie.image.url}`,
                         movieId: movie.id,
                         nameRU: movie.nameRU,
                         nameEN: movie.nameEN,
@@ -106,9 +107,9 @@ export default function Movies() {
             }
         } else {
             try {
-                const res = await mainApi.deleteMovie(movie._id, jwt);
+                const res = await mainApi.deleteMovie(movie.id, jwt);
                 const prevSaved = JSON.parse(localStorage.getItem('savedMovies') || "[]");
-                const newSaved = prevSaved.filter(item => item._id !== movie._id);
+                const newSaved = prevSaved.filter(item => item.movieId !== movie.id);
                 setSavedFilms(newSaved);
                 localStorage.setItem('savedMovies', JSON.stringify(newSaved));
             } catch (err) {
@@ -127,6 +128,7 @@ export default function Movies() {
             } handleSetSearchTumbler={handleSetSearchTumbler}
              searchTumbler={searchTumbler}/>
             <MoviesCardList 
+                savedFilms={savedFilms}
                 filmsRemains={filteredFilms.length - filmsShow.length}
                 moviesList={filmsShow}
                 handleClickFavourite={handleClickFavourite}

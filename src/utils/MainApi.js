@@ -75,9 +75,9 @@ export default class MainApi {
           ...this._headers,
           "Authorization": `${jwt}`,
         },
-        body: JSON.stringify({
+        body: JSON.stringify(
           data
-        })
+        )
       }).then(this._handleResponse);
     }
 

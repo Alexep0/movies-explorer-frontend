@@ -1,65 +1,57 @@
-import PromoProject from "../Main/PromoProject/PromoProject";
-import {Route, Routes, useLocation, useNavigate} from "react-router-dom";
-import AboutProject from "../Main/AboutProject/AboutProject";
-import AboutTechs from "../Main/AboutTechs/AboutTechs";
-import AboutMe from "../Main/AboutMe/AboutMe";
+import { Route, Routes, useNavigate } from "react-router-dom";
 import Footer from "../Footer/Footer";
 import Main from "../Main/Main";
 import Header from "../Header/Header";
-import {useState} from "react";
+import { useState } from "react";
 import NotFound from "../NotFound/NotFound";
 import Register from "../Auth/Register";
 import Login from "../Auth/Login";
 import Profile from "../Profile/Profile";
-import Preloader from "../Preloader/Preloader";
 import Movies from "../Movies/Movies";
 import SavedMovies from "../SavedMovies/SavedMovies";
-import constantFilm from "../../utils/constantFilm";
 import MenuPopup from "../MenuPopup/MenuPopup";
 import InfoTooltip from "../InfoTooltip/InfoTooltip";
 import MainApi from "../../utils/MainApi";
-import {useEffect} from "react";
+import { useEffect } from "react";
 import ProtectedRoute from "../ProtectedRoute/ProtectedRoute";
 
 function App() {
     const navigate = useNavigate()
 
-    const [isLoggedIn, setIsLoggedIn] = useState(false) 
+    const [isLoggedIn, setIsLoggedIn] = useState(false)
     const [isMenu, setIsMenu] = useState(false)
     const [isLoading, setIsLoading] = useState(true)
     const [isSuccess, setIsSuccess] = useState(false)
     const [isInfoToolTip, setIsInfoToolTip] = useState(false)
 
     const [user, setUser] = useState({})
-    const [movies, setMovies] = useState(constantFilm)
-    const [savedMovies, setSavedMovies] = useState(constantFilm.slice(0, 3))
 
     const mainApi = new MainApi();
-    
+
     function handleRegister(data) {
-        const {name, email, password} = data;
+        const { name, email, password } = data;
         mainApi.signUp(name, email, password).then(res => {
             if (res._id) {
-                handleLogin({email, password});
+                handleLogin({ email, password });
             }
         })
-        .catch((err) => {
-            console.log(err)
-            setIsSuccess(false)
-            setIsInfoToolTip(true)
-        }) 
+            .catch((err) => {
+                console.log(err)
+                setIsSuccess(false)
+                setIsInfoToolTip(true)
+            })
     }
 
-    
+
     function handleLogin(data) {
-        const {email, password} = data;
+        const { email, password } = data;
 
         mainApi.signIn(email, password)
             .then(res => {
                 if (res) {
                     localStorage.setItem('jwt', res.token)
                     setIsLoggedIn(true)
-                    navigate('/movies', {replace: true})
+                    navigate('/movies', { replace: true })
 
                     setIsSuccess(true)
                     setIsInfoToolTip(true)
@@ -81,10 +73,10 @@ function App() {
                     ...user,
                     name: data.name,
                     email: data.email
-                })  
+                })
                 setIsInfoToolTip(true)
                 setIsSuccess(true)
-            }) 
+            })
             .catch((err) => {
                 console.log(err)
                 setIsSuccess(false)
@@ -96,7 +88,7 @@ function App() {
         setIsLoggedIn(false)
         setUser({});
         localStorage.clear();
-        navigate('/', {replace: true})
+        navigate('/', { replace: true })
     }
 
     function handleOpenMenu() {
@@ -137,61 +129,58 @@ function App() {
                 .then(res => setUser(res.data))
                 .catch((err) => {
                     console.log(err)
-                    // setIsLoggedIn(false)
                 })
         }
     }, [isLoggedIn])
 
-
-
     return (
-      <>
-          <Header auth={isLoggedIn} openMenu={handleOpenMenu} />
+        <>
+            <Header auth={isLoggedIn} openMenu={handleOpenMenu} />
 
-          <Routes>
-              <Route path="/"
-                     element={<Main/>} />
-              <Route path="/signup"
-                     element={<Register onRegister={handleRegister}/>}/>
-              <Route path="/signin"
-                     element={<Login onRegister={handleLogin}/>}/>
-              <Route path="/profile"
-                     element={
+            <Routes>
+                <Route path="/"
+                    element={<Main />} />
+                <Route path="/signup"
+                    element={<Register onRegister={handleRegister} />} />
+                <Route path="/signin"
+                    element={<Login onRegister={handleLogin} />} />
+                <Route path="/profile"
+                    element={
                         <ProtectedRoute isAuth={isLoggedIn} loading={isLoading}>
-                        <Profile user={user}
-                                    onUpdateUser={handleUpdateProfile}
-                                    logout={handleLogOut}/>
-                    </ProtectedRoute>
-                }/>
-              <Route path="/movies"
-                     element={
+                            <Profile user={user}
+                                onUpdateUser={handleUpdateProfile}
+                                logout={handleLogOut} />
+                        </ProtectedRoute>
+                    } />
+                <Route path="/movies"
+                    element={
                         <ProtectedRoute isAuth={isLoggedIn} loading={isLoading}>
-                        <Movies />
-                        </ProtectedRoute>}/>
-              <Route path="/saved-movies"
-                     element={
+                            <Movies />
+                        </ProtectedRoute>} />
+                <Route path="/saved-movies"
+                    element={
                         <ProtectedRoute isAuth={isLoggedIn} loading={isLoading}>
-                     <SavedMovies moviesList={savedMovies}/>
-                     </ProtectedRoute>
-                    }/>
-              <Route path="*"
-                     element={<NotFound/>} />
-          </Routes>
+                            <SavedMovies />
+                        </ProtectedRoute>
+                    } />
+                <Route path="*"
+                    element={<NotFound />} />
+            </Routes>
 
-          <Footer/>
+            <Footer />
 
-          <MenuPopup
-              isOpen={isMenu}
-              onClose={handleClosePopup}
-          />
+            <MenuPopup
+                isOpen={isMenu}
+                onClose={handleClosePopup}
+            />
 
-          <InfoTooltip
-              isSuccess={ isSuccess }
-              isOpen={ isInfoToolTip }
-              onClose={ handleClosePopup }
-          />
-      </>
-  )
+            <InfoTooltip
+                isSuccess={isSuccess}
+                isOpen={isInfoToolTip}
+                onClose={handleClosePopup}
+            />
+        </>
+    )
 }
 
 export default App;
