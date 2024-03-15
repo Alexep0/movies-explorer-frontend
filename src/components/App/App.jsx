@@ -141,9 +141,17 @@ function App() {
                 <Route path="/"
                     element={<Main />} />
                 <Route path="/signup"
-                    element={<Register onRegister={handleRegister} />} />
+                    element={
+                        <ProtectedRoute isAuth={!isLoggedIn} loading={isLoading}>
+                            <Register onRegister={handleRegister} />
+                        </ProtectedRoute>
+                    } />
                 <Route path="/signin"
-                    element={<Login onRegister={handleLogin} />} />
+                    element={
+                        <ProtectedRoute isAuth={!isLoggedIn} loading={isLoading}>
+                            <Login onRegister={handleLogin} />
+                        </ProtectedRoute>
+                    } />
                 <Route path="/profile"
                     element={
                         <ProtectedRoute isAuth={isLoggedIn} loading={isLoading}>
