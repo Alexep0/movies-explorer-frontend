@@ -1,5 +1,6 @@
 import { moviesApi } from "../utils/MoviesApi";
 import {useState, useMemo} from "react";
+import {shortDuration} from "../utils/constants";
 
 export function useMovies() {
     const init = JSON.parse(localStorage.getItem('allMovies') || "[]");
@@ -42,7 +43,7 @@ export function useMovies() {
             const {nameEN, nameRU, duration} = film;
 
             const isSearched = searchQuery && (nameRU.toLowerCase().includes(searchQuery.toLowerCase()) || nameEN.toLowerCase().includes(searchQuery.toLowerCase()));
-            const isShort = searchTumbler && duration < 40;
+            const isShort = searchTumbler && duration < shortDuration;
 
             if (searchQuery && searchTumbler) {
                 if (isSearched && isShort) {

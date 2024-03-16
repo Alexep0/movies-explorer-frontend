@@ -14,6 +14,7 @@ import InfoTooltip from "../InfoTooltip/InfoTooltip";
 import MainApi from "../../utils/MainApi";
 import { useEffect } from "react";
 import ProtectedRoute from "../ProtectedRoute/ProtectedRoute";
+import CurrentUserContext from "../../context/CurrentUserContext";
 
 function App() {
     const navigate = useNavigate()
@@ -134,7 +135,7 @@ function App() {
     }, [isLoggedIn])
 
     return (
-        <>
+        <CurrentUserContext.Provider value={user}>
             <Header auth={isLoggedIn} openMenu={handleOpenMenu} />
 
             <Routes>
@@ -187,7 +188,7 @@ function App() {
                 isOpen={isInfoToolTip}
                 onClose={handleClosePopup}
             />
-        </>
+        </CurrentUserContext.Provider>
     )
 }
 

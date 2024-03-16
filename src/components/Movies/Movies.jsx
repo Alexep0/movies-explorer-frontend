@@ -4,21 +4,8 @@ import { useMovies } from "../../hooks/useMovies";
 import useResize from "../../hooks/useResize";
 import {useState, useEffect} from "react";
 import MainApi from "../../utils/MainApi";
+import {configForResize} from "../../utils/constants";
 
-const configForResize = {
-    4096: {
-        count: 12,
-        plus: 3
-    }, 
-    1297: {
-        count: 8,
-        plus: 2
-    }, 
-    767: {
-        count: 5,
-        plus: 2
-    }
-}
 
 function getCurrentConfig(width) {
     if (width < 767) {
