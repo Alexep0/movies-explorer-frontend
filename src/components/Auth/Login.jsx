@@ -1,23 +1,22 @@
-import {Link} from "react-router-dom";
-import {useState} from "react";
+import {Link} from "react-router-dom"; 
+import { useForm } from "../../hooks/useForm";
 
-export default function Login({onRegister}) {
-    const [inputValue, setInputValue] = useState({
-        email: '',
-        password: ''
-    })
-    const [inputError, setInputError] = useState({});
+export default function Login({onRegister}) { 
+
+    const {
+        errors: inputError,
+        handleChangeInput,
+        isFormValid,
+        values: inputValue
+    } = useForm(); 
 
     function handleSubmit(e) {
         e.preventDefault();
         onRegister(inputValue);
-    }
+    } 
 
-    function handleChangeInput(e) {
-        const{name , value, validationMessage} = e.target;
-        setInputValue({...inputValue, [name]: value});
-        setInputError({...inputError, [name]: validationMessage});
-    }
+    console.log(isFormValid) 
+
     return(
         <section className='auth'>
             <div className="auth__head">
@@ -53,7 +52,9 @@ export default function Login({onRegister}) {
                     <span className="auth__span-error">{inputError.password}</span>
                 </label>
                 <button type="submit"
-                        className="auth__button auth__button_login link">Войти</button>
+                        className="auth__button auth__button_login link"
+                        disabled={!isFormValid}
+                        >Войти</button>
             </form>
             <p className='auth__subtitle'>Еще не зарегистрированы?&ensp;
                 <Link to='/signup' className='link-nav link'>Регистрация</Link></p>

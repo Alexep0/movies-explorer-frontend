@@ -1,25 +1,21 @@
-import {Link} from "react-router-dom";
-import {useState} from "react";
+import {Link} from "react-router-dom"; 
+import { useForm } from "../../hooks/useForm";
 
-export default function Register({onRegister}) {
-    const [inputValue, setInputValue] = useState({
-        name: '',
-        email: '',
-        password: ''
-    })
-    const [inputError, setInputError] = useState({});
+export default function Register({onRegister}) { 
+    const {
+        errors: inputError,
+        handleChangeInput,
+        isFormValid,
+        values: inputValue
+    } = useForm(); 
 
     function handleSubmit(e) {
         e.preventDefault();
         onRegister(inputValue);
-    }
+    } 
 
-    function handleChangeInput(e) {
-        const{name , value, validationMessage} = e.target;
-        setInputValue({...inputValue, [name]: value});
-        setInputError({...inputError, [name]: validationMessage});
-    }
-
+    console.log(isFormValid) 
+    
     return (
         <section className='auth'>
             <div className="auth__head">
@@ -41,7 +37,7 @@ export default function Register({onRegister}) {
                     <span className="auth__span-error">{inputError.name}</span>
                 </label>
                 <label className="auth__label">E-mail
-                    <input
+                    <input  
                         required
                         className='auth__input'
                         type="email"
@@ -67,7 +63,9 @@ export default function Register({onRegister}) {
                     <span className="auth__span-error">{inputError.password}</span>
                 </label>
                 <button type="submit"
-                        className="auth__button auth__button_register link">Зарегистрироваться</button>
+                        className="auth__button auth__button_register link"
+                        disabled={!isFormValid}
+                        >Зарегистрироваться</button>
             </form>
             <p className='auth__subtitle'>Уже зарегистрированы?&ensp;
                 <Link to='/signin' className='link-nav link'>Войти</Link></p>
