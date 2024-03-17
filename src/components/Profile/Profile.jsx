@@ -1,12 +1,17 @@
-import {useState} from "react";
+import {useState, useEffect} from "react";
 
 export default function Profile({user, onUpdateUser, logout}) {
-
     const [inputEditProfile, setInputEditProfile] = useState({
-        name: user.name,
-        email: user.email
+        name: user.name || '',
+        email: user.email || ''
     })
     const [inputEdit, setInputEdit] = useState(false) // состояние disabled
+
+
+    const isNothingChanged = () => {
+        return user.name === inputEditProfile.name &&
+            user.email === inputEditProfile.email
+    }
 
     function handleEditInput(e) {
         const{name , value} = e.target;
@@ -16,8 +21,18 @@ export default function Profile({user, onUpdateUser, logout}) {
     function handleSaveEdit(e) {
         e.preventDefault()
         setInputEdit(false)
+        if (isNothingChanged()) return
         onUpdateUser(inputEditProfile)
     }
+
+    useEffect(() => {
+        if (user.name) {
+            setInputEditProfile({
+                name: user.name,
+                email: user.email
+            })
+        }
+    }, [user])
 
     return(
         <section className="profile">

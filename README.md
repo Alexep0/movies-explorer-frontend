@@ -33,3 +33,9 @@ https://github.com/Alexep0/movies-explorer-frontend
 
 ## Ссылка на макет 
 https://www.figma.com/file/6FMWkB94wE7KTkcCgUXtnC/Дипломный-проект?type=design&node-id=1-7552&mode=design&t=Fm2nSEeF7Zifa1bh-0
+
+## Ссылка на пул реквест 
+https://github.com/Alexep0/movies-explorer-frontend/pull/2
+
+## Ссылка на сайт
+https://movie-explore.alexep0.nomoredomainswork.ru/saved-movies

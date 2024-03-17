@@ -89,7 +89,7 @@
     background-color: transparent;
 }
 
-@media screen and (max-width: 890px){
+@media screen and (max-width: 910px){
     .movie__item {
         gap: 25px;
     }
